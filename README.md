@@ -1,5 +1,12 @@
 romcalc
 
+TO-DO
+================
+accept input      X
+convert to dec    
+add               
+convert to roman  
+================
 
 I=1////49 (can have 1-3)
 V=5////56
@@ -39,3 +46,20 @@ multiply
 
 Step 5
 divide
+
+MORE NOTES
+- - - - - -
+
+IV - 4
+XI - 11
+
+read a letter, check next letter, if greater, sub a from b
+opposite if lesser
+
+bunch of compares to see if valid
+
+cmp al,49h
+je good
+.
+.
+.
