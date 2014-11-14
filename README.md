@@ -6,6 +6,7 @@ accept input      X
 convert to dec    
 add               
 convert to roman  
+
 ================
 
 I=1////49 (can have 1-3)
