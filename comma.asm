@@ -8,20 +8,22 @@ buffer	DB	100h DUP (0)
 _DATA	ENDS
 _TEXT	SEGMENT WORD PUBLIC 'CODE'
 	ASSUME	cs:_TEXT, ds:DGROUP, ss:DGROUP
-start:
+start:													; THIS CODE CHECKS LENGTH OF ARGUMENTS AND EXITS IF 0
 	mov	ax, DGROUP
 	mov	ds, ax
 	mov	di, OFFSET buffer
 	mov	si, 82h
 	mov	al, es:[80h]
 	cmp	al, 0
-	je	done
-	
+	je	done											; END ARGUMENT CHECK
+	mov cl, al
 loop1:
 	mov	al, es:[si]
 	mov	[di], al
 	inc	di
 	inc	si
+	dec cl
+	jnz loop1
 next:
 	mov	al, 10
 	mov	[di], al
