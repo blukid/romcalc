@@ -2,9 +2,13 @@ romcalc
 
 TO-DO
 ================
+
 accept input      X
+
 convert to dec    
+
 add               
+
 convert to roman  
 
 ================
