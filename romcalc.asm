@@ -16,13 +16,13 @@ start:										; THIS CODE CHECKS LENGTH OF ARGUMENTS AND EXITS IF 0
 	mov	al, es:[80h]
 	cmp	al, 0
 	je	done								; END ARGUMENT CHECK
-	mo	cl, al
+	mov	cl, al
 loop1:
 	mov	al, es:[si]
 	cmp	al, 20h
 	je	space
 	cmp al, 2bh
-	je	add
+	je	addNum
 	mov	[di], al
 	inc	di
 	inc	si
@@ -33,9 +33,12 @@ space:
 	inc	si
 	dec	cl
 	jmp	loop1
-separate: jmp add
-add:	jmp convert
-convert: jmp next
+separate:
+	jmp addNum
+addNum:
+	jmp convert
+convert:
+	jmp next
 next:
 	mov	al, 10
 	mov	[di], al
