@@ -3,13 +3,13 @@ romcalc
 TO-DO
 ================
 
-accept input      X
+X accept input
 
-convert to dec    
+ convert to dec
 
-add               
+ add
 
-convert to roman  
+ convert to roman
 
 ================
 
