@@ -19,11 +19,17 @@ start:										; THIS CODE CHECKS LENGTH OF ARGUMENTS AND EXITS IF 0
 	mov cl, al
 loop1:
 	mov	al, es:[si]
+	cmp	al, 20h
+	je	space
 	mov	[di], al
 	inc	di
 	inc	si
-	dec cl
+	dec	cl
 	jnz loop1
+	jmp next
+space:
+	inc si
+	jmp loop1
 next:
 	mov	al, 10
 	mov	[di], al
