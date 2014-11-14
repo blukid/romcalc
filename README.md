@@ -23,9 +23,7 @@ M=1000//4D (can have doubles 1-3)
 
 Space=20
 +=2b
--=2d
-*=2a
-/=2f
+
 
 If I comes after I then print II which equals 2
 ..................which comes after I then print III which equals 3
@@ -42,15 +40,6 @@ invalid input
 
 Step 2
 add
-
-Step 3
-subtract
-
-Step 4
-multiply
-
-Step 5
-divide
 
 MORE NOTES
 - - - - - -
