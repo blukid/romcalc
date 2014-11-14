@@ -21,16 +21,21 @@ loop1:
 	mov	al, es:[si]
 	cmp	al, 20h
 	je	space
+	cmp al, 2bh
+	je	add
 	mov	[di], al
 	inc	di
 	inc	si
 	dec	cl
 	jnz	loop1
-	jmp	next
+	jmp	separate
 space:
 	inc	si
 	dec	cl
 	jmp	loop1
+separate: jmp add
+add:	jmp convert
+convert: jmp next
 next:
 	mov	al, 10
 	mov	[di], al
