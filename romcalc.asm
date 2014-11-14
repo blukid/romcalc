@@ -29,7 +29,6 @@ loop1:
 	jmp next
 space:
 	inc si
-	inc di
 	jmp loop1
 next:
 	mov	al, 10
