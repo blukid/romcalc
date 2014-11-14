@@ -18,4 +18,3 @@ start:
 	int	21h
 _TEXT	ENDS
 	END	start
-;ahhhhh i'm a code person i feel like I should be in the matrix and look at code or shit this is so exciting but not professional so I will erase this shorlty and this is a run on sentence.
