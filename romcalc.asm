@@ -5,6 +5,9 @@ STACK	SEGMENT PARA STACK 'STACK'
 STACK	ENDS
 _DATA	SEGMENT WORD PUBLIC 'DATA'
 buffer	DB	100h DUP (0)
+var1	DW	?
+var2	DW	?
+var3	DW	?
 _DATA	ENDS
 _TEXT	SEGMENT WORD PUBLIC 'CODE'
 	ASSUME	cs:_TEXT, ds:DGROUP, ss:DGROUP
@@ -29,7 +32,7 @@ remSpace:
 	dec 	di
 	mov		dx, di				; STORE DI VALUE FOR LATER COMPARISON, AND MOVE ORIGINAL VALUE BACK IN
 	mov		di, OFFSET buffer
-	jmp		convert			; IF CL = 0, NO MORE INPUT CHARACTERS
+	jmp		convert				; IF CL = 0, NO MORE INPUT CHARACTERS
 isSpace:
 	inc		si
 	dec		cl
@@ -67,32 +70,37 @@ rom2dec:
 ;	jmp		??????????
 
 plus:
-	
+	mov		var1, bx
+	mov		bx,	0
 	ret
 romI:
-	mov		ax, 1
+	add		bx, 1
 	ret
 romV:
-	mov		ax, 5
+	add		bx, 5
 	ret
 romX:
-	mov		ax, 10
+	add		bx, 10
 	ret
 romL:
-	mov		ax, 50
+	add		bx, 50
 	ret
 romC:
-	mov		ax, 100
+	add		bx, 100
 	ret
 romD:
-	mov		ax, 500
+	add		bx, 500
 	ret
 romM:
-	mov		ax, 1000
+	add		bx, 1000
 	ret
 ; -------------------- END CONVERT DEC CODE -------------------- ;
 
 sum:
+	mov		var2, bx
+	mov		ax, var1
+	add		ax, bx
+	mov		var3, ax
 	nop
 
 ; -------------------- END MATHS CODE -------------------- ;
@@ -101,8 +109,6 @@ dec2rom:
 	nop
 
 ; -------------------- END CONVERT ROM CODE -------------------- ;
-
-
 
 ; -------------------- START END/OUT CODE -------------------- ;
 
