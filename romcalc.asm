@@ -70,7 +70,7 @@ rom2dec:
 ;	jmp		??????????
 
 plus:
-	mov		var1, bx
+	mov		var1, bx		;why is bx moving into var1? and then why is 0 moving into bx?
 	mov		bx,	0
 	ret
 romI:
