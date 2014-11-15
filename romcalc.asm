@@ -8,41 +8,49 @@ buffer	DB	100h DUP (0)
 _DATA	ENDS
 _TEXT	SEGMENT WORD PUBLIC 'CODE'
 	ASSUME	cs:_TEXT, ds:DGROUP, ss:DGROUP
-start:										; THIS CODE CHECKS LENGTH OF ARGUMENTS AND EXITS IF 0
+start:						; THIS CODE CHECKS LENGTH OF ARGUMENTS AND EXITS IF 0
 	mov	ax, DGROUP
 	mov	ds, ax
 	mov	di, OFFSET buffer
 	mov	si, 82h
-	mov	al, es:[80h]
+	mov	al, es:[80h]		; GET NUMBER OF ARGUMENT CHARACTERS
 	cmp	al, 0
-	je	done								; END ARGUMENT CHECK
+	je	done
 	mov	cl, al
-	mov	dl, al
+	;mov	dl, al
 loop1:
 	mov	al, es:[si]
-	cmp	al, 20h
-	je	space
+	cmp	al, 20h				; CHECK FOR SPACES
+	je	isSpace
 	mov	[di], al
-	inc	di
+	inc	di					; INCREMENT MEMORY INDEXES AND DECREMENT INPUT NUMBER
 	inc	si
 	dec	cl
 	jnz	loop1
-	jmp	separate
-space:
+	dec di
+	mov dx, di
+	mov di, OFFSET buffer
+	jmp	findPlus			; IF CL = 0, NO MORE INPUT CHARACTERS
+isSpace:
 	inc	si
 	dec	cl
 	jmp	loop1
-separate:	
+findPlus:	
+	mov al, ds:[di]
 	cmp al, 2bh
-	je addNum
-	mov [ds], al
-	inc ds
-	dec dl
-	jz addNum
-	jmp separate
-addNum:
-	jmp convert
-convert:
+	je isPlus
+	;mov [ds], al
+	;inc ds
+	;dec dl
+	inc di
+	cmp di, dx
+	je rom2dec
+	jmp findPlus
+isPlus:
+	mov cx, di
+	inc di
+	jmp findPlus
+rom2dec:
 	jmp next
 next:
 	mov	al, 10
