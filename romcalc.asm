@@ -8,6 +8,7 @@ buffer	DB	100h DUP (0)
 var1	DW	?
 var2	DW	?
 var3	DW	?
+counter DB	?
 _DATA	ENDS
 _TEXT	SEGMENT WORD PUBLIC 'CODE'
 	ASSUME	cs:_TEXT, ds:DGROUP, ss:DGROUP
@@ -20,25 +21,36 @@ start:							; THIS CODE CHECKS LENGTH OF ARGUMENTS AND EXITS IF 0
 	cmp		al, 0
 	je		done
 	mov		cl, al
+siloop:
+	inc		si
+	dec		cl
+	jnz		siloop
+	mov		cl,	al
+	;mov		cl, al
+	dec		si
+	mov		counter, 0
 remSpace:
 	mov		al, es:[si]
 	cmp		al, 20h				; CHECK FOR SPACES
 	je		isSpace
 	mov		[di], al
 	inc		di					; INCREMENT MEMORY INDEXES AND DECREMENT INPUT NUMBER
-	inc		si
+	dec		si
+	inc		counter
 	dec		cl
 	jnz		remSpace
 	dec 	di
 	mov		dx, di				; STORE DI VALUE FOR LATER COMPARISON, AND MOVE ORIGINAL VALUE BACK IN
 	mov		di, OFFSET buffer
-	jmp		convert				; IF CL = 0, NO MORE INPUT CHARACTERS
+	jmp		reverse				; IF CL = 0, NO MORE INPUT CHARACTERS
 isSpace:
 	inc		si
 	dec		cl
 	jmp		remSpace
 
 ; -------------------- END SPACE CODE -------------------- ;
+reverse:
+	nop
 
 convert:
 	mov		al, ds:[di]			; LOADS 1st GOOD CHARACTER
