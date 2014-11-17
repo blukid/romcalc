@@ -240,8 +240,12 @@ dec2rom:
 	jge		outL
 	cmp		ax, 10
 	jge		outX
+;	cmp 	ax, 9
+;	jge		outIX
 	cmp		ax, 5
 	jge		outV
+	cmp		ax, 4
+	jge		outIV
 	cmp		ax, 1
 	jge		outI
 	jmp 	next
@@ -250,37 +254,79 @@ outM:
 	sub		ax, 1000
 	mov		[di], 'M'
 	inc		di
-	jmp dec2rom
+	jmp		dec2rom
+outCM:
+	sub		ax, 900
+	mov		[di], 'C'
+	inc		di
+	mov		[di], 'M'
+	inc 	di
+	jmp dec2rom	
 outD:
 	sub		ax, 500
 	mov		[di], 'D'
 	inc		di
-	jmp dec2rom
+	jmp		dec2rom
+outCD:
+	sub		ax, 400
+	mov		[di], 'C'
+	inc		di
+	mov		[di], 'D'
+	inc 	di
+	jmp dec2rom	
 outC:
 	sub		ax, 100
 	mov		[di], 'C'
 	inc		di
-	jmp dec2rom
+	jmp		dec2rom
+outXC:
+	sub		ax, 90
+	mov		[di], 'X'
+	inc		di
+	mov		[di], 'C'
+	inc 	di
+	jmp dec2rom	
 outL:
 	sub		ax, 50
 	mov		[di], 'L'
 	inc		di
-	jmp dec2rom
+	jmp		dec2rom
+outXL:
+	sub		ax, 40
+	mov		[di], 'X'
+	inc		di
+	mov		[di], 'L'
+	inc 	di
+	jmp dec2rom	
 outX:
 	sub		ax, 10
 	mov		[di], 'X'
 	inc		di
-	jmp dec2rom
+	jmp		dec2rom
+outIX:
+	sub		ax, 9
+	mov		[di], 'I'
+	inc		di
+	mov		[di], 'X'
+	inc 	di
+	jmp		dec2rom	
 outV:
 	sub		ax, 5
 	mov		[di], 'V'
 	inc		di
-	jmp dec2rom
+	jmp		dec2rom
+outIV:
+	sub		ax, 4
+	mov		[di], 'I'
+	inc		di
+	mov		[di], 'V'
+	inc 	di
+	jmp		dec2rom	
 outI:
 	sub		ax, 1
 	mov		[di], 'I'
 	inc		di
-	jmp dec2rom
+	jmp		dec2rom
 
 err:
 	mov		dx, OFFSET errmsg
