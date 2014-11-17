@@ -232,23 +232,31 @@ sum:
 dec2rom:
 	cmp		ax, 1000
 	jge		outM
+	cmp		ax, 900
+	jge		outCM
 	cmp		ax, 500
 	jge		outD
+	cmp		ax, 400
+	jge		outCD
 	cmp		ax, 100
 	jge		outC
+	cmp		ax, 90
+	jge		outXC
 	cmp		ax, 50
 	jge		outL
+	cmp		ax, 40
+	jge		outXL
 	cmp		ax, 10
 	jge		outX
-;	cmp 	ax, 9
-;	jge		outIX
+	cmp 		ax, 9
+	jge		outIX
 	cmp		ax, 5
 	jge		outV
 	cmp		ax, 4
 	jge		outIV
 	cmp		ax, 1
 	jge		outI
-	jmp 	next
+	jmp 		next
 	
 outM:
 	sub		ax, 1000
