@@ -26,7 +26,6 @@ siloop:
 	dec		cl
 	jnz		siloop
 	mov		cl,	al
-	;mov		cl, al
 	dec		si
 	mov		counter, 0
 remSpace:
@@ -39,12 +38,12 @@ remSpace:
 	inc		counter
 	dec		cl
 	jnz		remSpace
-	dec 	di
+	;dec 	di
 	mov		dx, di				; STORE DI VALUE FOR LATER COMPARISON, AND MOVE ORIGINAL VALUE BACK IN
 	mov		di, OFFSET buffer
 	jmp		reverse				; IF CL = 0, NO MORE INPUT CHARACTERS
 isSpace:
-	inc		si
+	dec		si
 	dec		cl
 	jmp		remSpace
 
