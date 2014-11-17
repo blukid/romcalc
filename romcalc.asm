@@ -124,6 +124,7 @@ romD:
 	add		bx, 500
 	ret
 romM:
+	mov		ch, 1000
 	add		bx, 1000
 	ret
 subI:
