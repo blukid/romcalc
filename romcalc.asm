@@ -41,6 +41,8 @@ remSpace:
 	;dec 	di
 	mov		dx, di				; STORE DI VALUE FOR LATER COMPARISON, AND MOVE ORIGINAL VALUE BACK IN
 	mov		di, OFFSET buffer
+	mov		bx, 0				; INITIALIZES BX REG FOR ADDITION
+	mov		ch, 0				; INITIALIZES CH REG FOR CMP
 	jmp		reverse				; IF CL = 0, NO MORE INPUT CHARACTERS
 isSpace:
 	dec		si
@@ -53,7 +55,6 @@ reverse:
 
 convert:
 	mov	al, ds:[di]	; LOADS 1st GOOD CHARACTER
-	mov	bx, 0		; INITIALIZES BX REGISTER FOR COMPARISONS
 	call	rom2dec
 	inc 	di					; INCREMENT
 	cmp 	di, dx				; CMP TO SEE IF AT END
@@ -84,57 +85,76 @@ rom2dec:
 plus:
 	mov		var1, bx	
 	mov		bx,	0
+	mov		ch, 0
 	ret
 romI:
-	cmp		bx, 1
+	cmp		ch, 1
 	jl		subI
+	mov		ch, 1
 	add		bx, 1
 	ret
 romV:
-	cmp		bx, 5
+	cmp		ch, 5
 	jl		subV
+	mov		ch, 5
 	add		bx, 5
 	ret
 romX:
-	cmp		bx, 10
+	cmp		ch, 10
 	jl		subX
+	mov		ch, 10
 	add		bx, 10
 	ret
 romL:
-	cmp		bx, 50
+	cmp		ch, 50
 	jl		subL
+	mov		ch, 50
 	add		bx, 50
 	ret
 romC:
-	cmp		bx, 100
+	cmp		ch, 100
 	jl		subC
+	mov		ch, 100
 	add		bx, 100
 	ret
 romD:
-	cmp		bx, 500
+	cmp		ch, 500
 	jl		subD
+	mov		ch, 500
 	add		bx, 500
 	ret
 romM:
 	add		bx, 1000
 	ret
 subI:
-	sub		bx, 1
+	sub		ch, 1
+	add		bx,ch
+	mov		ch, 1
 	ret
 subV:
-	sub		bx, 5
+	sub		ch, 5
+	add		bx, ch
+	mov		ch, 5
 	ret
 subX:
-	sub		bx, 10
+	sub		ch, 10
+	add		bx, ch
+	mov		ch, 10
 	ret
 subL:
-	sub		bx, 50
+	sub		ch, 50
+	add		bx, ch
+	mov		ch, 50
 	ret
 subC:
-	sub		bx, 100
+	sub		ch, 100
+	add		bx, ch
+	mov		ch, 100
 	ret
 subD:
-	sub		bx, 500
+	sub		ch, 500
+	add		bx, ch
+	mov		ch, 500
 	ret
 ; -------------------- END CONVERT DEC CODE -------------------- ;
 
