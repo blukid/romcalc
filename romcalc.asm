@@ -8,8 +8,8 @@ buffer	DB	100h DUP (0)
 var1	DW	?
 var2	DW	?
 var3	DW	?
-;counter DB	?
 answer	DB	100h DUP (0)
+errmsg	DB	'Error, total value may not exceed 3999$'
 _DATA	ENDS
 _TEXT	SEGMENT WORD PUBLIC 'CODE'
 	ASSUME	cs:_TEXT, ds:DGROUP, ss:DGROUP
@@ -141,37 +141,43 @@ rom2dec:
 	ret
 
 romI:
-	cmp		cx, 1
+	mov		ax, 1
+	cmp		ax, cx
 	jl		subI
 	mov		cx, 1
 	add		bx, 1
 	ret
 romV:
-	cmp		cx, 5
+	mov		ax, 5
+	cmp		ax, cx
 	jl		subV
 	mov		cx, 5
 	add		bx, 5
 	ret
 romX:
-	cmp		cx, 10
+	mov		ax, 10
+	cmp		ax, cx
 	jl		subX
 	mov		cx, 10
 	add		bx, 10
 	ret
 romL:
-	cmp		cx, 50
+	mov		ax, 50
+	cmp		ax, cx
 	jl		subL
 	mov		cx, 50
 	add		bx, 50
 	ret
 romC:
-	cmp		cx, 100
+	mov		ax, 100
+	cmp		ax, cx
 	jl		subC
 	mov		cx, 100
 	add		bx, 100
 	ret
 romD:
-	cmp		cx, 500
+	mov		ax, 500
+	cmp		ax, cx
 	jl		subD
 	mov		cx, 500
 	add		bx, 500
@@ -181,33 +187,33 @@ romM:
 	add		bx, 1000
 	ret
 subI:
-	sub		cx, 1
-	add		bx, cx
+	;sub		cx, 1
+	sub		bx, 1
 	mov		cx, 1
 	ret
 subV:
-	sub		cx, 5
-	add		bx, cx
+	;sub		cx, 5
+	sub		bx, 5
 	mov		cx, 5
 	ret
 subX:
-	sub		cx, 10
-	add		bx, cx
+	;sub		cx, 10
+	sub		bx, 10
 	mov		cx, 10
 	ret
 subL:
-	sub		cx, 50
-	add		bx, cx
+	;sub		cx, 50
+	sub		bx, 50
 	mov		cx, 50
 	ret
 subC:
-	sub		cx, 100
-	add		bx, cx
+	;sub		cx, 100
+	sub		bx, 100
 	mov		cx, 100
 	ret
 subD:
-	sub		cx, 500
-	add		bx, cx
+	;sub		cx, 500
+	sub		bx, 500
 	mov		cx, 500
 	ret
 ; -------------------- END CONVERT DEC CODE -------------------- ;
@@ -216,20 +222,30 @@ sum:
 	mov		var2, bx
 	mov		ax, var1
 	add		ax, bx
+	cmp		ax, 3999
+	jg		err
 	mov		var3, ax
 	nop
 
 ; -------------------- END MATHS CODE -------------------- ;
 
 dec2rom:
-	nop
+	jmp 	next
 
+err:
+	mov		dx, OFFSET errmsg
+	mov		ah, 9
+	int 	21h
+	;mov		dl, 10
+	;int 	21h
+	jmp 	done
 ; -------------------- END CONVERT ROM CODE -------------------- ;
 
 ; -------------------- START END/OUT CODE -------------------- ;
 
 next:
 	mov		di, OFFSET answer
+	mov		ax, var3
 	mov 	[di], ax
 	inc		di
 	mov		al, 10
@@ -237,8 +253,9 @@ next:
 	inc		di
 	mov		al, '$'
 	mov		[di], al
+	inc		di
 	mov		ah, 9h
-	mov		di, OFFSET answer
+	mov		dx, OFFSET answer
 	int		21h
 done:
 	mov		ax, 4C00h
