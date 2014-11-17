@@ -8,7 +8,8 @@ buffer	DB	100h DUP (0)
 var1	DW	?
 var2	DW	?
 var3	DW	?
-counter DB	?
+;counter DB	?
+answer	DB	100h DUP (0)
 _DATA	ENDS
 _TEXT	SEGMENT WORD PUBLIC 'CODE'
 	ASSUME	cs:_TEXT, ds:DGROUP, ss:DGROUP
@@ -28,7 +29,7 @@ siloop:
 	jnz		siloop
 	mov		cl,	al
 	dec		si
-	mov		counter, 0
+;	mov		counter, 0
 remSpace:
 	mov		al, es:[si]
 	cmp		al, 20h				; CHECK FOR SPACES
@@ -36,7 +37,7 @@ remSpace:
 	mov		[di], al
 	inc		di					; INCREMENT MEMORY INDEXES AND DECREMENT INPUT NUMBER
 	dec		si
-	inc		counter
+;	inc		counter
 	dec		cl
 	jnz		remSpace
 	;dec 	di
@@ -70,46 +71,59 @@ firstChar:
 
 first:
 	mov		cx, 1
+	mov		bx, 1
 	inc		di
 	jmp		convert
 second:
 	mov		cx, 5
+	mov		bx, 5
 	inc		di
 	jmp		convert
 third:
 	mov		cx, 10
+	mov		bx, 10
 	inc		di
 	jmp		convert
 fourth:
 	mov		cx, 50
+	mov		bx, 50
 	inc		di
 	jmp		convert
 fifth:
 	mov		cx, 100
+	mov		bx, 100
 	inc		di
 	jmp		convert
 sixth:
 	mov		cx, 500
+	mov		bx, 500
 	inc		di
 	jmp		convert
 seventh:
 	mov		cx, 1000
+	mov		bx, 1000
 	inc		di
 	jmp		convert
 
 convert:
-	mov		al, ds:[di]			; LOADS 1st GOOD CHARACTER
-	call	rom2dec
-	inc 	di					; INCREMENT
 	cmp 	di, dx				; CMP TO SEE IF AT END
 	je 		sum
+	mov		al, ds:[di]			; LOADS 1st GOOD CHARACTER
+	cmp		al, 2bh
+	jz		plus
+	call	rom2dec
+	inc 	di					; INCREMENT
 	jmp 	convert
 
+plus:
+	mov		var1, bx	
+	mov		bx,	0
+	mov		cx, 0
+	inc		di
+	jmp		firstChar
 ; -------------------- END CONVERT CODE -------------------- ;
 
 rom2dec:
-	cmp		al, 2bh
-	jz		plus
 	cmp		al, 49h
 	jz		romI
 	cmp		al, 56h
@@ -126,11 +140,6 @@ rom2dec:
 	jz		romM
 	ret
 
-plus:
-	mov		var1, bx	
-	mov		bx,	0
-	mov		cx, 0
-	ret
 romI:
 	cmp		cx, 1
 	jl		subI
@@ -220,13 +229,16 @@ dec2rom:
 ; -------------------- START END/OUT CODE -------------------- ;
 
 next:
+	mov		di, OFFSET answer
+	mov 	[di], ax
+	inc		di
 	mov		al, 10
 	mov		[di], al
 	inc		di
 	mov		al, '$'
 	mov		[di], al
 	mov		ah, 9h
-	mov		dx, OFFSET buffer
+	mov		di, OFFSET answer
 	int		21h
 done:
 	mov		ax, 4C00h
