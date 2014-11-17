@@ -18,8 +18,9 @@ start:							; THIS CODE CHECKS LENGTH OF ARGUMENTS AND EXITS IF 0
 	mov		di, OFFSET buffer
 	mov		si, 82h
 	mov		al, es:[80h]		; GET NUMBER OF ARGUMENT CHARACTERS
+	dec		al
 	cmp		al, 0
-	je		done
+	jle		done
 	mov		cl, al
 siloop:
 	inc		si
@@ -42,19 +43,62 @@ remSpace:
 	mov		dx, di				; STORE DI VALUE FOR LATER COMPARISON, AND MOVE ORIGINAL VALUE BACK IN
 	mov		di, OFFSET buffer
 	mov		bx, 0				; INITIALIZES BX REG FOR ADDITION
-	mov		ch, 0				; INITIALIZES CH REG FOR CMP
-	jmp		reverse				; IF CL = 0, NO MORE INPUT CHARACTERS
+	mov		cx, 0				; INITIALIZES CX REG FOR CMP
+	jmp		firstChar			; IF CL = 0, NO MORE INPUT CHARACTERS
 isSpace:
 	dec		si
 	dec		cl
 	jmp		remSpace
 
 ; -------------------- END SPACE CODE -------------------- ;
-reverse:
-	nop
+firstChar:
+	mov		al, ds:[di]
+	cmp		al, 49h
+	jz		first
+	cmp		al, 56h
+	jz		second
+	cmp		al, 58h
+	jz		third
+	cmp		al, 4ch
+	jz		fourth
+	cmp		al, 43h
+	jz		fifth
+	cmp		al, 44h
+	jz		sixth
+	cmp		al, 4dh
+	jz		seventh
+
+first:
+	mov		cx, 1
+	inc		di
+	jmp		convert
+second:
+	mov		cx, 5
+	inc		di
+	jmp		convert
+third:
+	mov		cx, 10
+	inc		di
+	jmp		convert
+fourth:
+	mov		cx, 50
+	inc		di
+	jmp		convert
+fifth:
+	mov		cx, 100
+	inc		di
+	jmp		convert
+sixth:
+	mov		cx, 500
+	inc		di
+	jmp		convert
+seventh:
+	mov		cx, 1000
+	inc		di
+	jmp		convert
 
 convert:
-	mov	al, ds:[di]	; LOADS 1st GOOD CHARACTER
+	mov		al, ds:[di]			; LOADS 1st GOOD CHARACTER
 	call	rom2dec
 	inc 	di					; INCREMENT
 	cmp 	di, dx				; CMP TO SEE IF AT END
@@ -80,82 +124,82 @@ rom2dec:
 	jz		romD
 	cmp		al, 4dh
 	jz		romM
-;	jmp		??????????
+	ret
 
 plus:
 	mov		var1, bx	
 	mov		bx,	0
-	mov		ch, 0
+	mov		cx, 0
 	ret
 romI:
-	cmp		ch, 1
+	cmp		cx, 1
 	jl		subI
-	mov		ch, 1
+	mov		cx, 1
 	add		bx, 1
 	ret
 romV:
-	cmp		ch, 5
+	cmp		cx, 5
 	jl		subV
-	mov		ch, 5
+	mov		cx, 5
 	add		bx, 5
 	ret
 romX:
-	cmp		ch, 10
+	cmp		cx, 10
 	jl		subX
-	mov		ch, 10
+	mov		cx, 10
 	add		bx, 10
 	ret
 romL:
-	cmp		ch, 50
+	cmp		cx, 50
 	jl		subL
-	mov		ch, 50
+	mov		cx, 50
 	add		bx, 50
 	ret
 romC:
-	cmp		ch, 100
+	cmp		cx, 100
 	jl		subC
-	mov		ch, 100
+	mov		cx, 100
 	add		bx, 100
 	ret
 romD:
-	cmp		ch, 500
+	cmp		cx, 500
 	jl		subD
-	mov		ch, 500
+	mov		cx, 500
 	add		bx, 500
 	ret
 romM:
-	mov		ch, 1000
+	mov		cx, 1000
 	add		bx, 1000
 	ret
 subI:
-	sub		ch, 1
-	add		bx,ch
-	mov		ch, 1
+	sub		cx, 1
+	add		bx, cx
+	mov		cx, 1
 	ret
 subV:
-	sub		ch, 5
-	add		bx, ch
-	mov		ch, 5
+	sub		cx, 5
+	add		bx, cx
+	mov		cx, 5
 	ret
 subX:
-	sub		ch, 10
-	add		bx, ch
-	mov		ch, 10
+	sub		cx, 10
+	add		bx, cx
+	mov		cx, 10
 	ret
 subL:
-	sub		ch, 50
-	add		bx, ch
-	mov		ch, 50
+	sub		cx, 50
+	add		bx, cx
+	mov		cx, 50
 	ret
 subC:
-	sub		ch, 100
-	add		bx, ch
-	mov		ch, 100
+	sub		cx, 100
+	add		bx, cx
+	mov		cx, 100
 	ret
 subD:
-	sub		ch, 500
-	add		bx, ch
-	mov		ch, 500
+	sub		cx, 500
+	add		bx, cx
+	mov		cx, 500
 	ret
 ; -------------------- END CONVERT DEC CODE -------------------- ;
 
