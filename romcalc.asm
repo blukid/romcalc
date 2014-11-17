@@ -40,7 +40,7 @@ remSpace:
 ;	inc		counter
 	dec		cl
 	jnz		remSpace
-	;dec 	di
+;	dec 	di
 	mov		dx, di				; STORE DI VALUE FOR LATER COMPARISON, AND MOVE ORIGINAL VALUE BACK IN
 	mov		di, OFFSET buffer
 	mov		bx, 0				; INITIALIZES BX REG FOR ADDITION
@@ -225,12 +225,62 @@ sum:
 	cmp		ax, 3999
 	jg		err
 	mov		var3, ax
-	nop
+	mov		di, OFFSET answer
 
 ; -------------------- END MATHS CODE -------------------- ;
 
 dec2rom:
+	cmp		ax, 1000
+	jge		outM
+	cmp		ax, 500
+	jge		outD
+	cmp		ax, 100
+	jge		outC
+	cmp		ax, 50
+	jge		outL
+	cmp		ax, 10
+	jge		outX
+	cmp		ax, 5
+	jge		outV
+	cmp		ax, 1
+	jge		outI
 	jmp 	next
+	
+outM:
+	sub		ax, 1000
+	mov		[di], 'M'
+	inc		di
+	jmp dec2rom
+outD:
+	sub		ax, 500
+	mov		[di], 'D'
+	inc		di
+	jmp dec2rom
+outC:
+	sub		ax, 100
+	mov		[di], 'C'
+	inc		di
+	jmp dec2rom
+outL:
+	sub		ax, 50
+	mov		[di], 'L'
+	inc		di
+	jmp dec2rom
+outX:
+	sub		ax, 10
+	mov		[di], 'X'
+	inc		di
+	jmp dec2rom
+outV:
+	sub		ax, 5
+	mov		[di], 'V'
+	inc		di
+	jmp dec2rom
+outI:
+	sub		ax, 1
+	mov		[di], 'I'
+	inc		di
+	jmp dec2rom
 
 err:
 	mov		dx, OFFSET errmsg
@@ -244,8 +294,9 @@ err:
 ; -------------------- START END/OUT CODE -------------------- ;
 
 next:
-	mov		di, OFFSET answer
-	mov		ax, var3
+	;mov		di, OFFSET answer
+	;add		di, 3
+	;mov		ax, var3
 	mov 	[di], ax
 	inc		di
 	mov		al, 10
@@ -253,7 +304,7 @@ next:
 	inc		di
 	mov		al, '$'
 	mov		[di], al
-	inc		di
+	;inc		di
 	mov		ah, 9h
 	mov		dx, OFFSET answer
 	int		21h
