@@ -52,7 +52,8 @@ reverse:
 	nop
 
 convert:
-	mov		al, ds:[di]			; LOADS 1st GOOD CHARACTER
+	mov	al, ds:[di]	; LOADS 1st GOOD CHARACTER
+	mov	bx, 0		; INITIALIZES BX REGISTER FOR COMPARISONS
 	call	rom2dec
 	inc 	di					; INCREMENT
 	cmp 	di, dx				; CMP TO SEE IF AT END
@@ -81,29 +82,59 @@ rom2dec:
 ;	jmp		??????????
 
 plus:
-	mov		var1, bx		;why is bx moving into var1? and then why is 0 moving into bx?
+	mov		var1, bx	
 	mov		bx,	0
 	ret
 romI:
+	cmp		bx, 1
+	jl		subI
 	add		bx, 1
 	ret
 romV:
+	cmp		bx, 5
+	jl		subV
 	add		bx, 5
 	ret
 romX:
+	cmp		bx, 10
+	jl		subX
 	add		bx, 10
 	ret
 romL:
+	cmp		bx, 50
+	jl		subL
 	add		bx, 50
 	ret
 romC:
+	cmp		bx, 100
+	jl		subC
 	add		bx, 100
 	ret
 romD:
+	cmp		bx, 500
+	jl		subD
 	add		bx, 500
 	ret
 romM:
 	add		bx, 1000
+	ret
+subI:
+	sub		bx, 1
+	ret
+subV:
+	sub		bx, 5
+	ret
+subX:
+	sub		bx, 10
+	ret
+subL:
+	sub		bx, 50
+	ret
+subC:
+	sub		bx, 100
+	ret
+subD:
+	sub		bx, 500
 	ret
 ; -------------------- END CONVERT DEC CODE -------------------- ;
 
